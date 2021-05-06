@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import moment from 'moment'
+import axios from "axios";
 class DateHeader extends Component {
 
     dateToArray = (dates) => {
@@ -53,6 +54,60 @@ class DateHeader extends Component {
 
 class Week extends Component {
 
+    componentDidMount() {
+        this.getscheduleByName();
+    }
+    getscheduleByName(){
+        var name=window.location.pathname;
+        var schedule=[];
+        axios.get('/api/getschedule'+name)
+            .then(res=>
+                res.data.forEach(function (item,index){
+                    var str =(item.taskdate+"-"+item.tasknum);
+                    var cbox = document.getElementById(str);
+                    cbox.checked = true;
+                    if(item.tasknum===4){
+                        for(var i=0; i<4; i++){
+                            str =(item.taskdate+"-"+i)
+                            cbox = document.getElementById(str);
+                            cbox.disabled=true;
+                            cbox.checked=false;
+                        }
+                    }
+                })
+            );
+    }
+
+    checkChange =({target})=>{
+        var date = target.id.substr(0,10);
+        var task = target.id.substr(11,12);
+        let data={
+            uname:window.location.pathname.substr(1,6),
+            taskdate:date,
+            tasknum:task
+        }
+        if(target.checked){
+            axios.post('/api', (data))
+        }else{
+            axios.delete('/api', {data:data})
+        }
+        if(task==='4'){
+            if(target.checked){
+                for(var i=0; i<4; i++) {
+                    console.log("test");
+                    document.getElementById(date+'-'+i).disabled = true;
+                    data.tasknum=i;
+                    axios.delete('/api', {data: data})
+                }
+            }else{
+                for(var i=0; i<4; i++) {
+                    document.getElementById(date+'-'+i).disabled = false;
+                }
+            }
+
+
+        }
+    }
     Days = (firstDayFormat,weekIndex) => {
         const _days = [];
 
@@ -66,7 +121,6 @@ class Week extends Component {
                 weekIndex
             });
         }
-
         return _days;
     }
 
@@ -95,11 +149,21 @@ class Week extends Component {
                             {dayInfo.getDay}
                         </label>
                         <div className="RCA-calendar-day-container">
-                            <input type="checkbox" /> 지방
-                            <input type="checkbox" /> 수도권
-                            <input type="checkbox" /> 6차시
-                            <input type="checkbox" /> 4차시
-                            <input type="checkbox" /> 조정 가능
+                            <input type="checkbox" onChange={(e)=>{
+                                this.checkChange(e);
+                            }} id={`${dayInfo.yearMonthDayFormat}-0`}/> 지방
+                            <input type="checkbox" onChange={(e)=>{
+                                this.checkChange(e);
+                            }}id={`${dayInfo.yearMonthDayFormat}-1`}/> 수도권
+                            <input type="checkbox" onChange={(e)=>{
+                                this.checkChange(e);
+                            }}id={`${dayInfo.yearMonthDayFormat}-2`}/> 6차시
+                            <input type="checkbox" onChange={(e)=>{
+                                this.checkChange(e);
+                            }}id={`${dayInfo.yearMonthDayFormat}-3`}/> 4차시
+                            <input type="checkbox" onChange={(e)=>{
+                                this.checkChange(e);
+                            }}id={`${dayInfo.yearMonthDayFormat}-4`}/> 조정 가능
                         </div>
                     </div>
                 )

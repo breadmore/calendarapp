@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import Header from './Header'
 import Calendar from './Calendar'
-import Board from "./Board";
+import MyButton from "./MyButton";
 import moment from 'moment'
 import Manage from "./Manage";
-
+import Board from "./Board";
 import './style/RCA.css'
-
 
 export default class App extends Component {
 
@@ -19,6 +18,8 @@ export default class App extends Component {
     static defaultProps = {
         clickFn : ()=>{}
     }
+
+
     //달(momth) 이동
     moveMonth = (month) => {
         this.setState({
@@ -82,6 +83,7 @@ export default class App extends Component {
     render() {
         return (
                 <div className="RCA-app-container">
+                    <MyButton/>
                     <Board/>
                     <Header calendarYM={this.state.calendarYM.format("YYYY년 MM월")}
                             today={this.state.today.format("현재 YYYY - MM - DD")}

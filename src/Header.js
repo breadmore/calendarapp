@@ -1,24 +1,36 @@
 import React, {Component} from 'react'
-
+import Select from 'react-select'
+import axios from "axios";
 class UserSelect extends Component{
 
     users =[
-        {value: 'grapefruit', label: 'Grapefruit'},
-        {value: 'strawberry', label: 'Strawberry'},
-        {value: 'vanilla', label: 'Vanilla'}
     ]
-
-
+    componentWillMount(){
+        this.getAllUsers();
+    }
+    getAllUsers(){
+        var users=[];
+       axios.get('/api/getAlluser')
+           .then(res =>
+               res.data.forEach(function (item,index){
+                   users.push({value: res.data[index].name, label:res.data[index].name});
+               })
+           );
+       this.users = users;
+    }
+    userChange =(value)=>{
+        window.location.href='/'+value;
+    }
 
     render() {
         return(
             <div className="RCA-header-select">
-                <select>
-                    <option value="grapefruit">Grapefruit</option>
-                    <option value="lime">Lime</option>
-                    <option selected value="coconut">Coconut</option>
-                    <option value="mango">Mango</option>
-                </select>
+                <Select
+                        onChange={(value)=>{
+                        this.userChange(value.value);
+                        }}
+                        options={this.users}>
+                </Select>
             </div>
         )
     }
@@ -29,6 +41,7 @@ export default class Header extends Component {
     render() {
         return (
             <div className="RCA-header-container">
+                <UserSelect/>
                 <h2 className="RCA-header-calendarYM RCA-header-middle">
                     {this.props.calendarYM}
                 </h2>
@@ -48,7 +61,7 @@ export default class Header extends Component {
                         </i>
                     </li>
                 </ul>
-                <UserSelect/>
+
             </div>
         )
     }
