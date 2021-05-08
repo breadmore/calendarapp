@@ -62,7 +62,7 @@ class Week extends Component {
         var schedule=[];
         axios.get('/api/getschedule'+name)
             .then(res=>
-                res.data.forEach(function (item,index){
+                [].forEach.call(res.data,function (item,index){
                     var str =(item.taskdate+"-"+item.tasknum);
                     var cbox = document.getElementById(str);
                     cbox.checked = true;

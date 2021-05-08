@@ -9,10 +9,16 @@ export default class Board extends Component {
     setInnerHtml(){
         axios.get('/api/board').then(function (res){
             var doc = document.getElementById('RCA-header-text');
+                [].forEach.call(res.data, function (item, index){
+                    doc.innerHTML=item.textarea;
+                })}
+            /*
+
 
             res.data.forEach(function (item,index){
                 doc.innerHTML=item.textarea;
             })}
+             */
         )
 
     }

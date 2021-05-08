@@ -12,7 +12,7 @@ class UserSelect extends Component{
         var users=[];
        axios.get('/api/getAlluser')
            .then(res =>
-               res.data.forEach(function (item,index){
+               [].forEach.call(res.data,function (item,index){
                    users.push({value: res.data[index].name, label:res.data[index].name});
                })
            );

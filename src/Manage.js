@@ -42,7 +42,7 @@ class ScheduleList extends Component{
 
         axios.get('/api/getselect/'+this.props.selected)
             .then(res=>
-                res.data.forEach(function (item,index){
+                [].forEach.call(res.data,function (item,index){
                     var content=document.createTextNode(item.uname);
                     switch (item.tasknum){
                         case 0:
